@@ -1,0 +1,16 @@
+Authentication and password storage
+=====================================
+
+- Passwords are never stored in plaintext. At signup, `AuthService` hashes the password with Spring Security’s `BCryptPasswordEncoder` and persists only `users.password_hash`.
+
+- Login uses Spring Security form login with a custom `UserDetailsService` (`DatabaseUserDetailsService`) that loads the user row by email and supplies the stored hash for credential verification.
+
+- Roles are modeled as `CUSTOMER` and `ADMIN` in the database; Spring Security maps them to `ROLE_CUSTOMER` and `ROLE_ADMIN` for `hasRole` checks on `/admin/**`.
+
+- Session fixation: Spring Security issues a new session on authentication by default.
+
+- CSRF protection is enabled for browser forms; Thymeleaf includes the CSRF token when using `th:action` on forms.
+
+- Destructive SQL (DELETE booking + payments) is restricted to ADMIN-only POST `/admin/bookings/delete` via Spring Security.
+
+References: Spring Security password storage (adaptive hashing / PasswordEncoder), Spring Boot externalized configuration for datasource credentials.

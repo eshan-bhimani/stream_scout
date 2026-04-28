@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Booking details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <h1>Booking #<span th:text="${booking.bookingId}">0</span></h1>
+    <div th:if="${message}" class="flash flash-ok" th:text="${message}"></div>
+
+    <div class="panel">
+        <p><strong>Hotel:</strong> <span th:text="${hotelName}">—</span></p>
+        <p><strong>Room:</strong> <span th:text="${roomName}">—</span></p>
+        <p><strong>Arrival:</strong> <span th:text="${#temporals.format(booking.arrivalDate, 'MMMM d, yyyy')}"></span></p>
+        <p><strong>Checkout:</strong> <span th:text="${#temporals.format(booking.checkoutDate, 'MMMM d, yyyy')}"></span></p>
+        <p><strong>Nights:</strong> <span th:text="${booking.totalNights}"></span></p>
+        <p><strong>Guests:</strong>
+            <span th:text="${booking.adults + ' adults, ' + booking.children + ' children, ' + booking.babies + ' babies'}"></span></p>
+        <p><strong>Meal:</strong> <span th:text="${booking.mealPlan}"></span></p>
+        <p><strong>Status:</strong>
+            <span th:if="${booking.canceled}" class="badge badge-warn">Canceled</span>
+            <span th:unless="${booking.canceled}" class="badge badge-ok" th:text="${booking.bookingStatus}"></span></p>
+        <p><strong>ADR:</strong> <span th:text="${booking.adr != null ? #numbers.formatDecimal(booking.adr, 1, 2) : '—'}"></span></p>
+        <p th:if="${booking.bookingDate != null}"><strong>Booked:</strong>
+            <span th:text="${#temporals.format(booking.bookingDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+    </div>
+
+    <p>
+        <a class="btn btn-secondary" th:href="@{/bookings/my}">Back to list</a>
+        <a th:if="${!booking.canceled}" class="btn" th:href="@{/bookings/{id}/edit(id=${booking.bookingId})}">Edit</a>
+    </p>
+</main>
+</body>
+</html>

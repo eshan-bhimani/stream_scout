@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin — Hotels</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <h1>Hotels</h1>
+    <div th:if="${message}" class="flash flash-ok" th:text="${message}"></div>
+    <p><a class="btn" th:href="@{/admin/hotels/edit}">Add hotel</a></p>
+    <table th:if="${!hotels.isEmpty()}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>City</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="h : ${hotels}">
+            <td th:text="${h.hotelId}"></td>
+            <td th:text="${h.hotelName}"></td>
+            <td th:text="${h.hotelType}"></td>
+            <td th:text="${h.city}"></td>
+            <td><a th:href="@{/admin/hotels/edit(id=${h.hotelId})}">Edit</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <p><a th:href="@{/admin}">← Dashboard</a></p>
+</main>
+</body>
+</html>

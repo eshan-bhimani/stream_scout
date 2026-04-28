@@ -1,0 +1,50 @@
+Indexing plan — Hotel Booking Management & Analytics System
+=============================================================
+
+Indexes created in ddl.sql (run after schema, before or with data load)
+------------------------------------------------------------------------
+  idx_users_email                    ON users(email)
+  idx_bookings_user_id               ON bookings(user_id)
+  idx_bookings_hotel_id_arrival_date ON bookings(hotel_id, arrival_date)
+  idx_bookings_room_type_id          ON bookings(room_type_id)
+
+Which application queries they speed up
+----------------------------------------
+  idx_users_email          — login lookup by email (UserRepository.findByEmail)
+  idx_bookings_user_id     — “My bookings” list (BookingRepository.findSummariesForUser)
+  idx_bookings_hotel_id_arrival_date — availability search overlap + admin filters by hotel/date
+  idx_bookings_room_type_id — room-usage analytics grouped by room_type_id
+
+How to capture “before vs after” times (MySQL 8)
+------------------------------------------------
+1. Populate the database with data.sql (large bookings table).
+2. Enable profiling:
+
+   SET profiling = 1;
+
+3. Run a representative query twice — example A (user history):
+
+   SELECT b.booking_id, h.hotel_name, r.room_name, b.arrival_date, b.checkout_date,
+          b.booking_status, b.canceled, b.adr
+   FROM bookings b
+   JOIN hotels h ON b.hotel_id = h.hotel_id
+   JOIN room_types r ON b.room_type_id = r.room_type_id
+   WHERE b.user_id = 2
+   ORDER BY b.arrival_date DESC;
+
+   SHOW PROFILES;
+
+4. Drop one index, repeat the same query, record Query_time:
+
+   ALTER TABLE bookings DROP INDEX idx_bookings_user_id;
+   -- run same SELECT again
+   SHOW PROFILES;
+   ALTER TABLE bookings ADD INDEX idx_bookings_user_id (user_id);
+
+5. Repeat for a second query, e.g. hotel/date slice (uses composite index):
+
+   SELECT COUNT(*) FROM bookings
+   WHERE hotel_id = 1 AND arrival_date BETWEEN '2015-07-01' AND '2015-12-31';
+
+Record your actual “before index” / “after index” seconds in this file for the grader. Times vary by
+machine; the requirement is to show methodology and honest measurements, not a specific number.

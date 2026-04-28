@@ -1,0 +1,33 @@
+Data source — Hotel Booking Management & Analytics System
+===========================================================
+
+Primary bulk data (bookings table, >1000 rows)
+----------------------------------------------
+Source: Kaggle dataset **Hotel booking demand** by Jesse Mostipak (same schema as commonly cited “H1/H2” hotel booking CSV).
+
+Canonical reference (link for your report / eLC):
+https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand
+
+Local file used in this repository:
+  ../hotel_bookings.csv   (project root: FinalProject/hotel_bookings.csv)
+
+How it becomes SQL
+--------------------
+The Python script `scripts/generate_bookings_sql.py` reads that CSV row-by-row and emits INSERT
+statements into **`data.sql`** together with:
+
+  - Seed users, hotels, and room_types (small, hand-authored)
+  - One INSERT…SELECT into `payments` (amount derived from ADR × total_nights; status REFUNDED if canceled)
+
+Row mix: approximately half the booking rows are taken from the **start** of the CSV (Resort Hotel
+records) and half from **City Hotel** rows later in the file, so both hotels appear in analytics.
+
+Regenerate `data.sql` after updating the CSV
+--------------------------------------------
+From directory `hotel-booking-system`:
+
+  python3 scripts/generate_bookings_sql.py
+
+Optional arguments: `<path-to.csv> <output.sql> <total-rows>` (default total 2500; minimum enforced 1001).
+
+Submission: include the generated **`data.sql`** so graders can run `ddl.sql` then `data.sql` only.

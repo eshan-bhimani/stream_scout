@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin — Bookings</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <h1>All bookings</h1>
+    <div th:if="${message}" class="flash flash-ok" th:text="${message}"></div>
+    <div th:if="${error}" class="flash flash-error" th:text="${error}"></div>
+
+    <section class="panel">
+        <form method="get" th:action="@{/admin/bookings}" class="search-bar">
+            <div class="form-row">
+                <label for="hotelId">Hotel</label>
+                <select id="hotelId" name="hotelId">
+                    <option value="">Any</option>
+                    <option th:each="h : ${hotels}" th:value="${h.hotelId}" th:text="${h.hotelName}"
+                            th:selected="${hotelId != null && hotelId == h.hotelId}"></option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    <option value="">Any</option>
+                    <option value="BOOKED" th:selected="${status == 'BOOKED'}">BOOKED</option>
+                    <option value="CHECKED_IN" th:selected="${status == 'CHECKED_IN'}">CHECKED_IN</option>
+                    <option value="CHECKED_OUT" th:selected="${status == 'CHECKED_OUT'}">CHECKED_OUT</option>
+                    <option value="CANCELED" th:selected="${status == 'CANCELED'}">CANCELED</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>
+                    <input type="checkbox" name="canceledOnly" value="true" th:checked="${canceledOnly != null && canceledOnly}"/>
+                    Canceled only
+                </label>
+            </div>
+            <button type="submit" class="btn">Filter</button>
+        </form>
+    </section>
+
+    <div style="overflow-x:auto;">
+        <table th:if="${!bookings.isEmpty()}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Hotel</th>
+                <th>Room</th>
+                <th>Arrival</th>
+                <th>Status</th>
+                <th>Update</th>
+                <th>Remove</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${bookings}">
+                <td th:text="${b.bookingId}"></td>
+                <td th:text="${b.userEmail != null ? b.userEmail : '—'}"></td>
+                <td th:text="${b.hotelName}"></td>
+                <td th:text="${b.roomName}"></td>
+                <td th:text="${#temporals.format(b.arrivalDate, 'yyyy-MM-dd')}"></td>
+                <td>
+                    <span th:if="${b.canceled}" class="badge badge-warn">Canceled</span>
+                    <span th:unless="${b.canceled}" th:text="${b.bookingStatus}"></span>
+                </td>
+                <td>
+                    <form th:action="@{/admin/bookings/status}" method="post" style="display:flex;flex-wrap:wrap;gap:0.35rem;align-items:center;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <input type="hidden" name="bookingId" th:value="${b.bookingId}"/>
+                        <select name="bookingStatus" style="max-width:140px;">
+                            <option th:selected="${b.bookingStatus == 'BOOKED'}" value="BOOKED">BOOKED</option>
+                            <option th:selected="${b.bookingStatus == 'CHECKED_IN'}" value="CHECKED_IN">CHECKED_IN</option>
+                            <option th:selected="${b.bookingStatus == 'CHECKED_OUT'}" value="CHECKED_OUT">CHECKED_OUT</option>
+                            <option th:selected="${b.bookingStatus == 'CANCELED'}" value="CANCELED">CANCELED</option>
+                        </select>
+                        <label style="font-size:0.8rem;color:var(--muted);">
+                            <input type="checkbox" name="canceled" value="true" th:checked="${b.canceled}"/> canceled
+                        </label>
+                        <button type="submit" class="btn" style="padding:0.3rem 0.5rem;font-size:0.8rem;">Save</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/admin/bookings/delete}" method="post"
+                          onsubmit="return confirm('Delete this booking and its payments permanently?');">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <input type="hidden" name="bookingId" th:value="${b.bookingId}"/>
+                        <button type="submit" class="btn btn-danger" style="padding:0.3rem 0.5rem;font-size:0.8rem;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="empty" th:if="${bookings.isEmpty()}">No rows (check filters).</p>
+    <p><a th:href="@{/admin}">← Dashboard</a></p>
+</main>
+</body>
+</html>

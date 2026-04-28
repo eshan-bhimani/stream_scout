@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${hotel.hotelName}">Hotel</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <h1 th:text="${hotel.hotelName}">Hotel</h1>
+    <p class="meta" th:text="${hotel.hotelType + ' · ' + hotel.city + ', ' + hotel.countryCode}"></p>
+    <p th:text="${hotel.description}"></p>
+
+    <section class="panel" style="margin-top:2rem;">
+        <h2>Room types</h2>
+        <table th:if="${!roomTypes.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Room</th>
+                <th>Guests</th>
+                <th>Bed</th>
+                <th>Price / night</th>
+                <th>Inventory</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${roomTypes}">
+                <td th:text="${r.roomName}"></td>
+                <td th:text="${r.maxAdults + ' adults, ' + r.maxChildren + ' children'}"></td>
+                <td th:text="${r.bedType}"></td>
+                <td th:text="${#numbers.formatDecimal(r.pricePerNight, 1, 2)}"></td>
+                <td th:text="${r.totalRooms}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="empty" th:if="${roomTypes.isEmpty()}">No room types configured.</p>
+    </section>
+
+    <p style="margin-top:1.5rem;">
+        <a class="btn btn-secondary" th:href="@{/}">Search availability from home</a>
+    </p>
+</main>
+</body>
+</html>

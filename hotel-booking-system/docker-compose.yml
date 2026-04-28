@@ -1,0 +1,12 @@
+# Class-style MySQL 8 for local demo (optional). JDBC URL in application.properties must match.
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hotel-booking-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: hotel_booking_db
+    ports:
+      # Use 3307 when host port 3306 is already taken by a local MySQL install.
+      - "3307:3306"
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
