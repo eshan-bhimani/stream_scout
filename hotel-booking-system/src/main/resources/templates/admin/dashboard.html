@@ -12,7 +12,7 @@
     <h1>Analytics dashboard</h1>
     <p class="meta">Aggregates over the full <code>bookings</code> table (including Kaggle-seeded history).</p>
 
-    <div class="stats">
+    <div class="stats" style="margin-top:1.25rem;">
         <div class="stat">
             <div class="value" th:text="${summary.totalBookings}">0</div>
             <div class="label">Total bookings</div>
@@ -33,24 +33,26 @@
 
     <section class="panel">
         <h2>By hotel</h2>
-        <table th:if="${!byHotel.isEmpty()}">
-            <thead>
-            <tr>
-                <th>Hotel</th>
-                <th>Bookings</th>
-                <th>Canceled</th>
-                <th>Avg ADR</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="row : ${byHotel}">
-                <td th:text="${row.hotelName}"></td>
-                <td th:text="${row.totalBookings}"></td>
-                <td th:text="${row.canceledBookings}"></td>
-                <td th:text="${row.avgDailyRate != null ? #numbers.formatDecimal(row.avgDailyRate, 1, 2) : '—'}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="overflow-x:auto;">
+            <table th:if="${!byHotel.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Hotel</th>
+                    <th>Bookings</th>
+                    <th>Canceled</th>
+                    <th>Avg ADR</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${byHotel}">
+                    <td th:text="${row.hotelName}"></td>
+                    <td th:text="${row.totalBookings}"></td>
+                    <td th:text="${row.canceledBookings}"></td>
+                    <td th:text="${row.avgDailyRate != null ? #numbers.formatDecimal(row.avgDailyRate, 1, 2) : '—'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <section class="panel">
@@ -77,31 +79,33 @@
 
     <section class="panel">
         <h2>Room type usage</h2>
-        <table th:if="${!roomUsage.isEmpty()}">
-            <thead>
-            <tr>
-                <th>Room</th>
-                <th>Hotel</th>
-                <th>Bookings</th>
-                <th>Avg stay (nights)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="u : ${roomUsage}">
-                <td th:text="${u.roomName}"></td>
-                <td th:text="${u.hotelName}"></td>
-                <td th:text="${u.totalBookings}"></td>
-                <td th:text="${u.avgStayLength != null ? #numbers.formatDecimal(u.avgStayLength, 1, 2) : '—'}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="overflow-x:auto;">
+            <table th:if="${!roomUsage.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Room</th>
+                    <th>Hotel</th>
+                    <th>Bookings</th>
+                    <th>Avg stay (nights)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${roomUsage}">
+                    <td th:text="${u.roomName}"></td>
+                    <td th:text="${u.hotelName}"></td>
+                    <td th:text="${u.totalBookings}"></td>
+                    <td th:text="${u.avgStayLength != null ? #numbers.formatDecimal(u.avgStayLength, 1, 2) : '—'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 
-    <p>
+    <div class="btn-group">
         <a class="btn" th:href="@{/admin/bookings}">Manage bookings</a>
         <a class="btn btn-secondary" th:href="@{/admin/hotels}">Hotels</a>
         <a class="btn btn-secondary" th:href="@{/admin/rooms}">Room types</a>
-    </p>
+    </div>
 </main>
 </body>
 </html>

@@ -9,6 +9,7 @@
 <body>
 <div th:replace="~{fragments :: nav}"></div>
 <main>
+    <a class="page-back" th:href="@{/admin/hotels}">&larr; Hotels</a>
     <h1 th:text="${hotel.hotelId != null && hotel.hotelId > 0} ? 'Edit hotel' : 'New hotel'">Hotel</h1>
     <div class="panel" style="max-width:520px;">
         <form th:action="@{/admin/hotels/save}" method="post" th:object="${hotel}">
@@ -34,8 +35,10 @@
                 <label for="description">Description</label>
                 <textarea id="description" rows="4" th:field="*{description}"></textarea>
             </div>
-            <button type="submit" class="btn">Save</button>
-            <a class="btn btn-secondary" th:href="@{/admin/hotels}">Cancel</a>
+            <div class="btn-group" style="margin-top:0.75rem;">
+                <button type="submit" class="btn">Save</button>
+                <a class="btn btn-secondary" th:href="@{/admin/hotels}">Cancel</a>
+            </div>
         </form>
     </div>
 </main>

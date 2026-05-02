@@ -9,6 +9,7 @@
 <body>
 <div th:replace="~{fragments :: nav}"></div>
 <main>
+    <a class="page-back" th:href="@{/admin/rooms}">&larr; Room types</a>
     <h1 th:text="${roomType.roomTypeId != null && roomType.roomTypeId > 0} ? 'Edit room type' : 'New room type'">Room</h1>
     <div class="panel" style="max-width:520px;">
         <form th:action="@{/admin/rooms/save}" method="post" th:object="${roomType}">
@@ -44,8 +45,10 @@
                 <label for="totalRooms">Total rooms (inventory)</label>
                 <input id="totalRooms" type="number" th:field="*{totalRooms}" min="1" required/>
             </div>
-            <button type="submit" class="btn">Save</button>
-            <a class="btn btn-secondary" th:href="@{/admin/rooms}">Cancel</a>
+            <div class="btn-group" style="margin-top:0.75rem;">
+                <button type="submit" class="btn">Save</button>
+                <a class="btn btn-secondary" th:href="@{/admin/rooms}">Cancel</a>
+            </div>
         </form>
     </div>
 </main>

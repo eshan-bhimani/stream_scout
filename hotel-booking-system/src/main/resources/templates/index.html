@@ -38,13 +38,15 @@
         </form>
     </section>
 
-    <h2 style="margin-top:1.75rem;">Featured hotels</h2>
+    <h2 class="section-heading">Featured hotels</h2>
     <div class="card-grid" th:if="${!hotels.isEmpty()}">
         <article class="card" th:each="h : ${hotels}">
             <h3 th:text="${h.hotelName}">Hotel</h3>
             <p class="meta" th:text="${h.hotelType + ' · ' + h.city + ', ' + h.countryCode}">Meta</p>
             <p th:text="${h.description}">Description</p>
-            <a class="btn btn-secondary" th:href="@{/hotels/{id}(id=${h.hotelId})}" style="margin-top:0.6rem;display:inline-block;">View rooms</a>
+            <div style="margin-top:0.75rem;">
+                <a class="btn btn-secondary" th:href="@{/hotels/{id}(id=${h.hotelId})}">View rooms</a>
+            </div>
         </article>
     </div>
     <p class="empty" th:if="${hotels.isEmpty()}">No hotels loaded yet. Run the database scripts.</p>
