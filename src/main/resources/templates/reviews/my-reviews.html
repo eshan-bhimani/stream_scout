@@ -3,30 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060a12">
   <title>My reviews • StreamScout</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<main class="container">
-  <header th:replace="~{fragments :: topbar}"></header>
+<div class="page">
+  <div class="container">
+    <header th:replace="~{fragments :: topbar}"></header>
 
-  <section class="card">
-    <h1>My reviews</h1>
-    <p class="muted">Reviews you have submitted on StreamScout. Open a title to see all reviews for that movie.</p>
-  </section>
+    <section class="panel">
+      <p class="eyebrow">Your voice</p>
+      <h1>My reviews</h1>
+      <p class="muted section-lead">A dedicated history of ratings and comments you’ve posted—jump back into any title to continue the conversation.</p>
+    </section>
 
-  <section class="card">
-    <div th:if="${#lists.isEmpty(reviews)}" class="muted">You have not written any reviews yet.</div>
-    <div th:each="r : ${reviews}" class="review-row">
-      <div class="review-row-head">
-        <a class="review-title" th:href="@{'/movies/' + ${r.movieId}}" th:text="${r.movieTitle}">Title</a>
-        <span class="muted" th:text="${r.stars + '★'}">5★</span>
+    <section class="panel panel-tight">
+      <div th:if="${#lists.isEmpty(reviews)}" class="muted">Nothing here yet — review something from its detail page.</div>
+      <div th:each="r : ${reviews}" class="review-row">
+        <div class="review-row-head">
+          <a class="review-title" th:href="@{'/movies/' + ${r.movieId}}" th:text="${r.movieTitle}">Title</a>
+          <span class="pill pill-strong" th:text="${r.stars + '★'}">5★</span>
+        </div>
+        <div class="muted review-date" th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}">date</div>
+        <div class="muted" style="margin-top:10px;" th:if="${r.reviewText != null and !r.reviewText.isEmpty()}" th:text="${r.reviewText}"></div>
+        <div class="muted" style="margin-top:10px;" th:if="${r.reviewText == null or r.reviewText.isEmpty()}"><em>No written comment.</em></div>
       </div>
-      <div class="muted review-date" th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}">date</div>
-      <div class="muted" th:if="${r.reviewText != null and !r.reviewText.isEmpty()}" th:text="${r.reviewText}"></div>
-      <div class="muted" th:if="${r.reviewText == null or r.reviewText.isEmpty()}">(No comment)</div>
-    </div>
-  </section>
-</main>
+    </section>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>

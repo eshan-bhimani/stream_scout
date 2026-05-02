@@ -3,38 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060a12">
   <title>Login • StreamScout</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <main class="container">
+<div class="page">
+  <div class="container">
     <header th:replace="~{fragments :: topbar}"></header>
 
-    <section class="card">
-      <h1>Login</h1>
-      <p class="muted">Use your StreamScout account to manage your watchlist and reviews.</p>
+    <div class="auth-panel">
+      <section class="panel">
+        <p class="eyebrow">Secure access</p>
+        <h1>Welcome back</h1>
+        <p class="muted section-lead">Sign in with your StreamScout account to unlock watchlists and reviews backed by JDBC + Spring Security.</p>
 
-      <form method="post" action="/auth/login" class="form">
-        <label>
-          <span>Username</span>
-          <input name="username" autocomplete="username" required>
-        </label>
-        <label>
-          <span>Password</span>
-          <input name="password" type="password" autocomplete="current-password" required>
-        </label>
+        <form method="post" action="/auth/login" class="form">
+          <label>
+            <span>Username</span>
+            <input name="username" autocomplete="username" required>
+          </label>
+          <label>
+            <span>Password</span>
+            <input name="password" type="password" autocomplete="current-password" required>
+          </label>
+          <button class="btn primary btn-block" type="submit">Sign in</button>
+        </form>
 
-        <button class="btn primary" type="submit">Login</button>
-      </form>
+        <div class="notice">
+          <div class="error" th:if="${param.error}">Those credentials didn’t match—try again.</div>
+          <div class="ok" th:if="${param.signup}">Account ready. Sign in whenever you’d like.</div>
+        </div>
 
-      <div class="notice">
-        <div class="error" th:if="${param.error}">Invalid username or password.</div>
-        <div class="ok" th:if="${param.signup}">Account created. Please log in.</div>
-      </div>
-
-      <p class="muted">No account? <a href="/auth/signup">Create one</a>.</p>
-    </section>
-  </main>
+        <div class="divider-soft"></div>
+        <p class="muted auth-foot">Need an account? <a href="/auth/signup"><strong>Create one</strong></a></p>
+      </section>
+    </div>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>
-

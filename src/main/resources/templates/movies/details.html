@@ -3,71 +3,86 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060a12">
   <title th:text="${m.title + ' • StreamScout'}">Movie • StreamScout</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<main class="container">
-  <header th:replace="~{fragments :: topbar}"></header>
+<div class="page">
+  <div class="container">
+    <header th:replace="~{fragments :: topbar}"></header>
 
-  <section class="card">
-    <div style="display:flex; gap:16px; align-items:flex-start;">
-      <div style="flex:1; min-width:0;">
-        <h1 th:text="${m.title}">Title</h1>
-        <div class="muted" th:text="${m.contentType + ' • ' + m.genre + ' • ' + m.releaseYear + ' • ' + m.durationMinutes + ' min'}"></div>
-        <div class="muted" th:text="${'Country: ' + m.country + ' • Language: ' + m.language}"></div>
-        <div class="muted" th:text="${m.rating != null ? 'Rating: ' + m.rating + ' (votes: ' + (m.votes != null ? m.votes : 0) + ')' : 'Rating: N/A'}"></div>
-        <div class="muted" th:text="${m.avgStars != null ? 'User reviews: ' + #numbers.formatDecimal(m.avgStars,1,1) + '★ (' + m.reviewCount + ')' : 'User reviews: none yet'}"></div>
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-          <span class="btn" th:each="p : ${m.platforms}" th:text="${p}"></span>
+    <section class="panel">
+      <p class="eyebrow" th:text="${m.contentType}">Movie</p>
+      <div class="detail-head">
+        <div style="flex:1; min-width:min(100%, 320px);">
+          <h1 th:text="${m.title}">Title</h1>
+          <div class="pill-row">
+            <span class="pill pill-strong" th:text="${m.genre}">Genre</span>
+            <span class="pill" th:text="${m.releaseYear}">2024</span>
+            <span class="pill pill-accent" th:text="${m.durationMinutes + ' min'}">120 min</span>
+          </div>
+          <div class="detail-meta muted">
+            <div th:text="${m.country + ' · ' + m.language}">UK · English</div>
+            <div th:text="${m.rating != null ? 'CSV rating ' + m.rating + ' · ' + (m.votes != null ? m.votes : 0) + ' votes' : 'No aggregate rating in CSV'}"></div>
+            <div th:text="${m.avgStars != null ? 'Your community: ' + #numbers.formatDecimal(m.avgStars,1,1) + '★ avg · ' + m.reviewCount + ' review(s)' : 'No reviews yet — be the first'}"></div>
+          </div>
+          <div class="pill-row">
+            <span class="pill pill-accent" th:each="plat : ${m.platforms}" th:text="${plat}">Netflix</span>
+          </div>
+        </div>
+        <div class="detail-actions">
+          <form method="post" action="/watchlist/add">
+            <input type="hidden" name="movieId" th:value="${m.id}">
+            <button class="btn primary btn-block" type="submit">Add to watchlist</button>
+          </form>
+          <a class="btn btn-ghost btn-block" href="/movies">← Back to catalog</a>
         </div>
       </div>
-      <div style="display:flex; flex-direction:column; gap:10px;">
-        <form method="post" action="/watchlist/add">
+      <div class="divider-soft"></div>
+      <h2 class="section-title" style="margin-top:8px;">Synopsis</h2>
+      <p class="prose" th:text="${m.description}">Description</p>
+    </section>
+
+    <div class="two-col-desktop">
+      <section class="panel">
+        <h2 class="section-title">Leave a review</h2>
+        <p class="muted section-lead">Share a 1–5 star rating with optional notes. You’ll need to be signed in.</p>
+        <form class="form" method="post" action="/reviews/add">
           <input type="hidden" name="movieId" th:value="${m.id}">
-          <button class="btn primary" type="submit">Add to watchlist</button>
+          <label>
+            <span>Stars</span>
+            <select name="stars" required>
+              <option value="5">5 — Loved it</option>
+              <option value="4">4 — Strong</option>
+              <option value="3">3 — Okay</option>
+              <option value="2">2 — Weak</option>
+              <option value="1">1 — Skip</option>
+            </select>
+          </label>
+          <label>
+            <span>Comment (optional)</span>
+            <textarea name="text" rows="4" maxlength="1000" placeholder="No spoilers—just your take."></textarea>
+          </label>
+          <button class="btn primary" type="submit">Post review</button>
         </form>
-      </div>
+      </section>
+
+      <section class="panel review-feed">
+        <h2 class="section-title">Recent reviews</h2>
+        <p class="muted section-lead">Latest feedback from StreamScout users for this title.</p>
+        <div th:if="${#lists.isEmpty(reviews)}" class="muted" style="margin-top:16px;">No reviews yet.</div>
+        <div th:each="r : ${reviews}" class="review-entry" style="margin-top:8px;">
+          <div class="review-feed-head">
+            <span class="review-user" th:text="${r.username}">user</span>
+            <span class="pill pill-strong" th:text="${r.stars + '★'}">5★</span>
+          </div>
+          <div class="muted" style="margin-top:6px; font-size:0.9rem;" th:if="${r.reviewText != null and !r.reviewText.isBlank()}" th:text="${r.reviewText}"></div>
+        </div>
+      </section>
     </div>
-
-    <p class="muted" style="margin-top:12px;" th:text="${m.description}"></p>
-  </section>
-
-  <section class="card">
-    <h1 style="font-size:20px;">Leave a review</h1>
-    <form class="form" method="post" action="/reviews/add">
-      <input type="hidden" name="movieId" th:value="${m.id}">
-      <label>
-        <span>Stars</span>
-        <select name="stars" required>
-          <option value="5">5</option>
-          <option value="4">4</option>
-          <option value="3">3</option>
-          <option value="2">2</option>
-          <option value="1">1</option>
-        </select>
-      </label>
-      <label>
-        <span>Text (optional)</span>
-        <textarea name="text" rows="3" maxlength="1000"></textarea>
-      </label>
-      <button class="btn primary" type="submit">Submit review</button>
-    </form>
-    <p class="muted">You must be logged in to add to watchlist or leave reviews.</p>
-  </section>
-
-  <section class="card">
-    <h1 style="font-size:20px;">Recent reviews</h1>
-    <div th:if="${#lists.isEmpty(reviews)}" class="muted">No reviews yet.</div>
-    <div th:each="r : ${reviews}" style="padding:10px 0; border-top:1px solid rgba(255,255,255,0.10);">
-      <div style="display:flex; justify-content:space-between; gap:10px;">
-        <div style="font-weight:700;" th:text="${r.username}">user</div>
-        <div class="muted" th:text="${r.stars + '★'}">5★</div>
-      </div>
-      <div class="muted" th:text="${r.reviewText}"></div>
-    </div>
-  </section>
-</main>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>
-

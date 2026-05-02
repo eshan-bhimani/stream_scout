@@ -3,30 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Platforms • StreamScout</title>
+  <meta name="theme-color" content="#060a12">
+  <title>Platform insights • StreamScout</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<main class="container">
-  <header th:replace="~{fragments :: topbar}"></header>
+<div class="page">
+  <div class="container">
+    <header th:replace="~{fragments :: topbar}"></header>
 
-  <section class="card">
-    <h1>Platform analytics</h1>
-    <p class="muted">Aggregations computed from the database using joins and group-by.</p>
-  </section>
+    <section class="panel">
+      <p class="eyebrow">Aggregations</p>
+      <h1>OTT platform snapshot</h1>
+      <p class="muted section-lead">Derived from SQL joins between <code style="color:#b8c9ec;">platform</code>, <code style="color:#b8c9ec;">availability</code>, and <code style="color:#b8c9ec;">movie</code> — counts and averages over the seeded catalog.</p>
+    </section>
 
-  <section class="card">
-    <h1 style="font-size:20px;">Summary</h1>
-    <div style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px; margin-top:12px;">
-      <div class="card" style="padding:12px;" th:each="s : ${stats}">
-        <div style="font-weight:800; font-size:18px;" th:text="${s.platformName}">Platform</div>
-        <div class="muted" th:text="${'Titles: ' + s.titleCount}"></div>
-        <div class="muted" th:text="${'Avg rating: ' + #numbers.formatDecimal(s.avgRating,1,2)}"></div>
-        <div class="muted" th:text="${'Avg trending: ' + #numbers.formatDecimal(s.avgTrending,1,2)}"></div>
+    <section class="panel panel-tight">
+      <h2 class="section-title">Key metrics by platform</h2>
+      <div class="stat-grid">
+        <div class="stat-card" th:each="s : ${stats}">
+          <h3 th:text="${s.platformName}">Platform</h3>
+          <p class="stat-caption">Titles in catalog</p>
+          <p class="stat-metric" th:text="${s.titleCount}">833</p>
+          <p class="stat-caption">Avg CSV rating</p>
+          <p class="stat-metric" style="font-size:1.35rem; -webkit-text-fill-color:unset; color:var(--accent-2);" th:text="${#numbers.formatDecimal(s.avgRating,1,2)}">8.2</p>
+          <p class="stat-caption">Avg trending score</p>
+          <p class="stat-metric" style="font-size:1.35rem; -webkit-text-fill-color:unset; color:var(--text-muted);" th:text="${#numbers.formatDecimal(s.avgTrending,1,2)}">1800</p>
+        </div>
       </div>
-    </div>
-  </section>
-</main>
+    </section>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>
-

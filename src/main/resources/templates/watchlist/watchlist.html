@@ -3,49 +3,56 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060a12">
   <title>My watchlist • StreamScout</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<main class="container">
-  <header th:replace="~{fragments :: topbar}"></header>
+<div class="page">
+  <div class="container">
+    <header th:replace="~{fragments :: topbar}"></header>
 
-  <section class="card">
-    <h1>My watchlist</h1>
-    <p class="muted">Update status or remove items. This page is generated entirely from database rows.</p>
-  </section>
+    <section class="panel">
+      <p class="eyebrow">Personal queue</p>
+      <h1>My watchlist</h1>
+      <p class="muted section-lead">Titles you’ve saved straight from JDBC — drag status forward as you binge, or remove what you’ll never revisit.</p>
+    </section>
 
-  <section class="card">
-    <div th:if="${#lists.isEmpty(rows)}" class="muted">No items yet. Browse a title and add it to your watchlist.</div>
+    <section class="panel panel-tight">
+      <div th:if="${#lists.isEmpty(rows)}" class="muted">No saved titles yet. Head to the catalog and tap <strong>Add to watchlist</strong>.</div>
 
-    <div th:each="r : ${rows}" style="padding:12px 0; border-top:1px solid rgba(255,255,255,0.10);">
-      <div style="display:flex; justify-content:space-between; gap:12px; align-items:center;">
-        <div style="min-width:0;">
-          <div style="font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-            <a th:href="@{'/movies/' + ${r.movieId}}" th:text="${r.title}">Title</a>
+      <div class="watch-grid">
+        <div class="watch-row" th:each="r : ${rows}">
+          <div style="min-width:min(100%,260px);">
+            <div class="watch-title">
+              <a th:href="@{'/movies/' + ${r.movieId}}" th:text="${r.title}">Title</a>
+            </div>
+            <div class="muted" style="margin-top:6px;" th:text="${r.contentType + ' · ' + r.releaseYear + ' · status: ' + r.status}">Movie · 2021</div>
           </div>
-          <div class="muted" th:text="${r.contentType + ' • ' + r.releaseYear + ' • ' + r.status}"></div>
-        </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <form method="post" action="/watchlist/status" style="display:flex; gap:8px; align-items:center;">
-            <input type="hidden" name="id" th:value="${r.id}">
-            <select name="status">
-              <option value="PLANNED" th:selected="${r.status == 'PLANNED'}">PLANNED</option>
-              <option value="WATCHING" th:selected="${r.status == 'WATCHING'}">WATCHING</option>
-              <option value="COMPLETED" th:selected="${r.status == 'COMPLETED'}">COMPLETED</option>
-              <option value="DROPPED" th:selected="${r.status == 'DROPPED'}">DROPPED</option>
-            </select>
-            <button class="btn primary" type="submit">Update</button>
-          </form>
-          <form method="post" action="/watchlist/remove">
-            <input type="hidden" name="id" th:value="${r.id}">
-            <button class="btn danger" type="submit">Remove</button>
-          </form>
+          <div class="watch-controls">
+            <form method="post" action="/watchlist/status" class="watch-controls-inline">
+              <input type="hidden" name="id" th:value="${r.id}">
+              <label style="margin:0;">
+                <span class="muted" style="display:block; margin-bottom:6px;">Status</span>
+                <select name="status">
+                  <option value="PLANNED" th:selected="${r.status == 'PLANNED'}">Planned</option>
+                  <option value="WATCHING" th:selected="${r.status == 'WATCHING'}">Watching</option>
+                  <option value="COMPLETED" th:selected="${r.status == 'COMPLETED'}">Completed</option>
+                  <option value="DROPPED" th:selected="${r.status == 'DROPPED'}">Dropped</option>
+                </select>
+              </label>
+              <button class="btn primary btn-sm" type="submit" style="align-self:flex-end;">Save</button>
+            </form>
+            <form method="post" action="/watchlist/remove">
+              <input type="hidden" name="id" th:value="${r.id}">
+              <button class="btn danger btn-sm" type="submit">Remove</button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-</main>
+    </section>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>
-

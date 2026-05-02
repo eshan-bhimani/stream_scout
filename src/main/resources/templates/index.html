@@ -3,35 +3,47 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>StreamScout</title>
+  <meta name="theme-color" content="#060a12">
+  <title>StreamScout • Discover what to watch</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<main class="container">
-  <header th:replace="~{fragments :: topbar}"></header>
+<div class="page">
+  <div class="container">
+    <header th:replace="~{fragments :: topbar}"></header>
 
-  <section class="card">
-    <h1>Find what to watch next</h1>
-    <p class="muted">Browse a catalog of movies/series and see which OTT platform has them. Save favorites to your watchlist and leave reviews.</p>
-    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-      <a class="btn primary" href="/movies">Browse trending</a>
-      <a class="btn" href="/platforms">Platform analytics</a>
-    </div>
-  </section>
-
-  <section class="card">
-    <h1 style="font-size:20px;">Trending picks</h1>
-    <div class="grid" style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px;">
-      <a class="card" style="padding:12px;" th:each="m : ${trending}" th:href="@{'/movies/' + ${m.id}}">
-        <div style="min-width:0;">
-          <div style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" th:text="${m.title}"></div>
-          <div class="muted" th:text="${m.contentType + ' • ' + m.genre + ' • ' + m.releaseYear}"></div>
-          <div class="muted" th:text="${m.rating != null ? 'Rating: ' + m.rating : 'Rating: N/A'}"></div>
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Streaming intelligence</p>
+        <h1 class="hero-title">Find what to watch next—across platforms.</h1>
+        <p class="muted section-lead">Explore a seeded catalog of movies and series with availability signals, trending scores from the dataset, and your own watchlist and reviews—all backed by MySQL.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="/movies">Browse full catalog</a>
+          <a class="btn outline-muted" href="/platforms">Platform insights</a>
         </div>
-      </a>
-    </div>
-  </section>
-</main>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Curated sampling</p>
+          <h2 class="section-title">Trending on the leaderboard</h2>
+          <p class="muted section-lead">Top titles sorted by trending score from the CSV—dig into any card for synopsis, availability, and community reviews.</p>
+        </div>
+        <span class="badge-count">Showing 12 of 2500+ titles</span>
+      </div>
+      <div class="catalog-grid">
+        <a class="catalog-card" th:each="m : ${trending}" th:href="@{'/movies/' + ${m.id}}">
+          <span class="type-tag" th:text="${m.contentType}">Series</span>
+          <div class="catalog-card-title" th:text="${m.title}">Title</div>
+          <div class="catalog-card-meta" th:text="${m.genre + ' · ' + m.releaseYear}">Drama · 2024</div>
+          <div class="catalog-card-score" th:text="${m.rating != null ? '★ ' + m.rating + ' trending' : 'No rating'}">★ 8.4</div>
+        </a>
+      </div>
+    </section>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>
-

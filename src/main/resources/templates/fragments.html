@@ -3,36 +3,51 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <th:block th:fragment="topbar">
-  <header class="topbar">
-    <a class="brand" href="/">StreamScout</a>
-    <nav class="nav nav-main">
-      <a href="/movies">Browse</a>
-      <a href="/platforms">Platforms</a>
-    </nav>
-    <div class="nav-actions">
-      <th:block sec:authorize="isAnonymous()">
-        <nav class="nav">
-          <a href="/auth/login">Login</a>
-          <a href="/auth/signup">Sign up</a>
-        </nav>
-      </th:block>
-      <th:block sec:authorize="isAuthenticated()">
-        <div class="dropdown">
-          <button type="button" class="dropdown-toggle btn" aria-haspopup="true" aria-expanded="false">
-            Welcome, <span sec:authentication="name">user</span>
-            <span class="caret" aria-hidden="true">▾</span>
-          </button>
-          <div class="dropdown-menu" role="menu">
-            <a href="/watchlist" role="menuitem">My watchlist</a>
-            <a href="/my-reviews" role="menuitem">My reviews</a>
-            <form th:action="@{/auth/logout}" method="post" role="none">
-              <button type="submit" class="dropdown-signout" role="menuitem">Sign out</button>
-            </form>
+  <div class="topbar-wrap">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <span class="brand-name"><span class="brand-mark"></span>StreamScout</span>
+        <span class="brand-tagline">OTT discovery</span>
+      </a>
+      <nav class="nav-main">
+        <a class="nav-link" href="/movies">Browse catalog</a>
+        <a class="nav-link" href="/platforms">Platforms</a>
+      </nav>
+      <div class="nav-actions">
+        <th:block sec:authorize="isAnonymous()">
+          <div class="nav-pill-row">
+            <a class="nav-link" href="/auth/login">Login</a>
+            <a class="nav-link nav-link-accent" href="/auth/signup">Sign up</a>
           </div>
-        </div>
-      </th:block>
+        </th:block>
+        <th:block sec:authorize="isAuthenticated()">
+          <div class="dropdown">
+            <button type="button" class="dropdown-toggle btn primary" aria-haspopup="true" aria-expanded="false">
+              Welcome, <span sec:authentication="name">user</span>
+              <span class="caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="dropdown-menu" role="menu">
+              <a href="/watchlist" role="menuitem">My watchlist</a>
+              <a href="/my-reviews" role="menuitem">My reviews</a>
+              <div class="dropdown-divider" aria-hidden="true"></div>
+              <form th:action="@{/auth/logout}" method="post" role="none">
+                <button type="submit" class="dropdown-signout" role="menuitem">Sign out</button>
+              </form>
+            </div>
+          </div>
+        </th:block>
+      </div>
+    </header>
+  </div>
+</th:block>
+
+<th:block th:fragment="footer">
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <span>StreamScout — demo catalog, watchlists &amp; reviews (course project).</span>
+      <span>Built with Spring Boot · Thymeleaf · MySQL</span>
     </div>
-  </header>
+  </footer>
 </th:block>
 </body>
 </html>

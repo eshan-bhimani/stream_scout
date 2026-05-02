@@ -3,63 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Browse • StreamScout</title>
+  <meta name="theme-color" content="#060a12">
+  <title>Browse catalog • StreamScout</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<main class="container">
-  <header th:replace="~{fragments :: topbar}"></header>
+<div class="page">
+  <div class="container">
+    <header th:replace="~{fragments :: topbar}"></header>
 
-  <section class="card">
-    <h1>Browse</h1>
-    <form class="form" method="get" action="/movies" style="grid-template-columns: repeat(6, minmax(0, 1fr)); align-items:end;">
-      <label style="grid-column: span 2;">
-        <span>Title contains</span>
-        <input name="q" th:value="${q}">
-      </label>
-      <label>
-        <span>Platform</span>
-        <select name="platform">
-          <option value="">Any</option>
-          <option th:each="p : ${platforms}" th:value="${p}" th:selected="${p == platform}" th:text="${p}"></option>
-        </select>
-      </label>
-      <label>
-        <span>Type</span>
-        <select name="type">
-          <option value="">Any</option>
-          <option value="Movie" th:selected="${type == 'Movie'}">Movie</option>
-          <option value="Series" th:selected="${type == 'Series'}">Series</option>
-        </select>
-      </label>
-      <label>
-        <span>Year min</span>
-        <input name="yearMin" type="number" min="1900" max="2100" th:value="${yearMin}">
-      </label>
-      <label>
-        <span>Year max</span>
-        <input name="yearMax" type="number" min="1900" max="2100" th:value="${yearMax}">
-      </label>
-      <div style="grid-column: span 6; display:flex; gap:10px;">
-        <button class="btn primary" type="submit">Search</button>
-        <a class="btn" href="/movies">Reset</a>
-      </div>
-    </form>
-  </section>
+    <section class="panel">
+      <p class="eyebrow">Search &amp; filters</p>
+      <h1>Catalog browser</h1>
+      <p class="muted section-lead">Filter the full seeded dataset—the default view loads every title imported from your CSV.</p>
 
-  <section class="card">
-    <h1 style="font-size:20px;" th:text="'Results (' + ${#lists.size(movies)} + ')'"></h1>
-    <div class="grid" style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px;">
-      <a class="card" style="padding:12px;" th:each="m : ${movies}" th:href="@{'/movies/' + ${m.id}}">
-        <div style="min-width:0;">
-          <div style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" th:text="${m.title}"></div>
-          <div class="muted" th:text="${m.contentType + ' • ' + m.genre + ' • ' + m.releaseYear}"></div>
-          <div class="muted" th:text="${m.rating != null ? 'Rating: ' + m.rating : 'Rating: N/A'}"></div>
+      <form class="filter-grid" style="margin-top:22px;" method="get" action="/movies">
+        <label class="span-2">
+          <span>Title contains</span>
+          <input name="q" th:value="${q}" placeholder="e.g. Crimson, Cyber, Silent…">
+        </label>
+        <label>
+          <span>Platform</span>
+          <select name="platform">
+            <option value="">Any</option>
+            <option th:each="p : ${platforms}" th:value="${p}" th:selected="${p == platform}" th:text="${p}"></option>
+          </select>
+        </label>
+        <label>
+          <span>Type</span>
+          <select name="type">
+            <option value="">Any</option>
+            <option value="Movie" th:selected="${type == 'Movie'}">Movie</option>
+            <option value="Series" th:selected="${type == 'Series'}">Series</option>
+          </select>
+        </label>
+        <label>
+          <span>Year from</span>
+          <input name="yearMin" type="number" min="1900" max="2100" placeholder="1900" th:value="${yearMin}">
+        </label>
+        <label>
+          <span>Year through</span>
+          <input name="yearMax" type="number" min="1900" max="2100" placeholder="2100" th:value="${yearMax}">
+        </label>
+        <div class="filter-actions">
+          <button class="btn primary" type="submit">Apply filters</button>
+          <a class="btn btn-ghost" href="/movies">Reset catalog</a>
         </div>
-      </a>
-    </div>
-  </section>
-</main>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="section-title">Results</h2>
+        <span class="badge-count" th:text="${#lists.size(movies)} + ' titles match'"></span>
+      </div>
+      <div class="catalog-grid">
+        <a class="catalog-card" th:each="m : ${movies}" th:href="@{'/movies/' + ${m.id}}">
+          <span class="type-tag" th:text="${m.contentType}">Movie</span>
+          <div class="catalog-card-title" th:text="${m.title}">Title</div>
+          <div class="catalog-card-meta" th:text="${m.genre + ' · ' + m.releaseYear}">Action · 2020</div>
+          <div class="catalog-card-score" th:text="${m.rating != null ? '★ ' + m.rating : 'No CSV rating'}"></div>
+        </a>
+      </div>
+    </section>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>
-

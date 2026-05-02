@@ -3,34 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060a12">
   <title>Sign up • StreamScout</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <main class="container">
+<div class="page">
+  <div class="container">
     <header th:replace="~{fragments :: topbar}"></header>
 
-    <section class="card">
-      <h1>Create account</h1>
-      <p class="muted">Passwords are stored securely using BCrypt hashing.</p>
+    <div class="auth-panel">
+      <section class="panel">
+        <p class="eyebrow">Join the beta</p>
+        <h1>Create your profile</h1>
+        <p class="muted section-lead">Passwords are salted and hashed with BCrypt before touching MySQL—mirroring industry practice for course demos.</p>
 
-      <form method="post" action="/auth/signup" class="form" th:object="${form}">
-        <label>
-          <span>Username</span>
-          <input th:field="*{username}" autocomplete="username" required>
-        </label>
-        <label>
-          <span>Password</span>
-          <input th:field="*{password}" type="password" autocomplete="new-password" required>
-        </label>
-        <button class="btn primary" type="submit">Sign up</button>
-      </form>
+        <form method="post" action="/auth/signup" class="form" th:object="${form}">
+          <label>
+            <span>Username</span>
+            <input th:field="*{username}" autocomplete="username" required placeholder="3+ characters">
+          </label>
+          <label>
+            <span>Password</span>
+            <input th:field="*{password}" type="password" autocomplete="new-password" required placeholder="8+ characters recommended">
+          </label>
+          <button class="btn primary btn-block" type="submit">Launch my account</button>
+        </form>
 
-      <div class="notice">
-        <div class="error" th:if="${error}" th:text="${error}"></div>
-      </div>
-    </section>
-  </main>
+        <div class="notice">
+          <div class="error" th:if="${error}" th:text="${error}"></div>
+        </div>
+
+        <div class="divider-soft"></div>
+        <p class="muted auth-foot">Already scouting? <a href="/auth/login"><strong>Log in</strong></a></p>
+      </section>
+    </div>
+  </div>
+  <footer th:replace="~{fragments :: footer}"></footer>
+</div>
 </body>
 </html>
-
