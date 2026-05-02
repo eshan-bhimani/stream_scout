@@ -1,5 +1,6 @@
 package com.example.streamscout.repository;
 
+import com.example.streamscout.model.MyReviewRow;
 import com.example.streamscout.model.ReviewRow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,6 +66,38 @@ public class ReviewRepository {
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException("Failed to add review", e);
+    }
+  }
+
+  public List<MyReviewRow> listForUser(long userId, int limit) {
+    String sql = """
+        SELECT r.id, m.id AS movie_id, m.title, r.stars, r.review_text, r.created_at
+        FROM review r
+        JOIN movie m ON m.id = r.movie_id
+        WHERE r.user_id = ?
+        ORDER BY r.created_at DESC
+        LIMIT ?
+        """;
+    try (Connection conn = dataSource.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+      ps.setLong(1, userId);
+      ps.setInt(2, Math.max(1, Math.min(limit, 500)));
+      List<MyReviewRow> out = new ArrayList<>();
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          out.add(new MyReviewRow(
+              rs.getLong("id"),
+              rs.getLong("movie_id"),
+              rs.getString("title"),
+              rs.getInt("stars"),
+              rs.getString("review_text"),
+              rs.getTimestamp("created_at").toInstant()
+          ));
+        }
+      }
+      return out;
+    } catch (SQLException e) {
+      throw new RuntimeException("Failed to list user reviews", e);
     }
   }
 }

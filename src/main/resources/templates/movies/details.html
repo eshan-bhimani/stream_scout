@@ -8,15 +8,7 @@
 </head>
 <body>
 <main class="container">
-  <header class="topbar">
-    <a class="brand" href="/">StreamScout</a>
-    <nav class="nav">
-      <a href="/movies">Browse</a>
-      <a href="/platforms">Platforms</a>
-      <a href="/watchlist">My watchlist</a>
-      <a href="/auth/login">Login</a>
-    </nav>
-  </header>
+  <header th:replace="~{fragments :: topbar}"></header>
 
   <section class="card">
     <div style="display:flex; gap:16px; align-items:flex-start;">

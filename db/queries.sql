@@ -71,3 +71,12 @@ WHERE r.movie_id = ?
 ORDER BY r.created_at DESC
 LIMIT ?;
 
+-- Q9 (List current user's reviews with movie titles - join)
+-- ReviewRepository.listForUser(...)
+SELECT r.id, m.id AS movie_id, m.title, r.stars, r.review_text, r.created_at
+FROM review r
+JOIN movie m ON m.id = r.movie_id
+WHERE r.user_id = ?
+ORDER BY r.created_at DESC
+LIMIT ?;
+

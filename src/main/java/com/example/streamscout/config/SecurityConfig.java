@@ -22,7 +22,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/", "/movies/**", "/platforms/**", "/css/**", "/js/**", "/auth/**").permitAll()
-            .requestMatchers("/watchlist/**", "/reviews/**").authenticated()
+            .requestMatchers("/watchlist/**", "/reviews/**", "/my-reviews").authenticated()
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )

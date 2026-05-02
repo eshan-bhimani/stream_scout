@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<th:block th:fragment="topbar">
+  <header class="topbar">
+    <a class="brand" href="/">StreamScout</a>
+    <nav class="nav nav-main">
+      <a href="/movies">Browse</a>
+      <a href="/platforms">Platforms</a>
+    </nav>
+    <div class="nav-actions">
+      <th:block sec:authorize="isAnonymous()">
+        <nav class="nav">
+          <a href="/auth/login">Login</a>
+          <a href="/auth/signup">Sign up</a>
+        </nav>
+      </th:block>
+      <th:block sec:authorize="isAuthenticated()">
+        <div class="dropdown">
+          <button type="button" class="dropdown-toggle btn" aria-haspopup="true" aria-expanded="false">
+            Welcome, <span sec:authentication="name">user</span>
+            <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="/watchlist" role="menuitem">My watchlist</a>
+            <a href="/my-reviews" role="menuitem">My reviews</a>
+            <form th:action="@{/auth/logout}" method="post" role="none">
+              <button type="submit" class="dropdown-signout" role="menuitem">Sign out</button>
+            </form>
+          </div>
+        </div>
+      </th:block>
+    </div>
+  </header>
+</th:block>
+</body>
+</html>
