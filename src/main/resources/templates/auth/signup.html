@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign up • StreamScout</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="topbar">
+      <a class="brand" href="/">StreamScout</a>
+      <nav class="nav">
+        <a href="/movies">Browse</a>
+        <a href="/platforms">Platforms</a>
+        <a href="/auth/login">Login</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <h1>Create account</h1>
+      <p class="muted">Passwords are stored securely using BCrypt hashing.</p>
+
+      <form method="post" action="/auth/signup" class="form" th:object="${form}">
+        <label>
+          <span>Username</span>
+          <input th:field="*{username}" autocomplete="username" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input th:field="*{password}" type="password" autocomplete="new-password" required>
+        </label>
+        <button class="btn primary" type="submit">Sign up</button>
+      </form>
+
+      <div class="notice">
+        <div class="error" th:if="${error}" th:text="${error}"></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${m.title + ' • StreamScout'}">Movie • StreamScout</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<main class="container">
+  <header class="topbar">
+    <a class="brand" href="/">StreamScout</a>
+    <nav class="nav">
+      <a href="/movies">Browse</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/watchlist">My watchlist</a>
+      <a href="/auth/login">Login</a>
+    </nav>
+  </header>
+
+  <section class="card">
+    <div style="display:flex; gap:16px; align-items:flex-start;">
+      <div style="flex:1; min-width:0;">
+        <h1 th:text="${m.title}">Title</h1>
+        <div class="muted" th:text="${m.contentType + ' • ' + m.genre + ' • ' + m.releaseYear + ' • ' + m.durationMinutes + ' min'}"></div>
+        <div class="muted" th:text="${'Country: ' + m.country + ' • Language: ' + m.language}"></div>
+        <div class="muted" th:text="${m.rating != null ? 'Rating: ' + m.rating + ' (votes: ' + (m.votes != null ? m.votes : 0) + ')' : 'Rating: N/A'}"></div>
+        <div class="muted" th:text="${m.avgStars != null ? 'User reviews: ' + #numbers.formatDecimal(m.avgStars,1,1) + '★ (' + m.reviewCount + ')' : 'User reviews: none yet'}"></div>
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+          <span class="btn" th:each="p : ${m.platforms}" th:text="${p}"></span>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <form method="post" action="/watchlist/add">
+          <input type="hidden" name="movieId" th:value="${m.id}">
+          <button class="btn primary" type="submit">Add to watchlist</button>
+        </form>
+      </div>
+    </div>
+
+    <p class="muted" style="margin-top:12px;" th:text="${m.description}"></p>
+  </section>
+
+  <section class="card">
+    <h1 style="font-size:20px;">Leave a review</h1>
+    <form class="form" method="post" action="/reviews/add">
+      <input type="hidden" name="movieId" th:value="${m.id}">
+      <label>
+        <span>Stars</span>
+        <select name="stars" required>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </label>
+      <label>
+        <span>Text (optional)</span>
+        <textarea name="text" rows="3" maxlength="1000"></textarea>
+      </label>
+      <button class="btn primary" type="submit">Submit review</button>
+    </form>
+    <p class="muted">You must be logged in to add to watchlist or leave reviews.</p>
+  </section>
+
+  <section class="card">
+    <h1 style="font-size:20px;">Recent reviews</h1>
+    <div th:if="${#lists.isEmpty(reviews)}" class="muted">No reviews yet.</div>
+    <div th:each="r : ${reviews}" style="padding:10px 0; border-top:1px solid rgba(255,255,255,0.10);">
+      <div style="display:flex; justify-content:space-between; gap:10px;">
+        <div style="font-weight:700;" th:text="${r.username}">user</div>
+        <div class="muted" th:text="${r.stars + '★'}">5★</div>
+      </div>
+      <div class="muted" th:text="${r.reviewText}"></div>
+    </div>
+  </section>
+</main>
+</body>
+</html>
+

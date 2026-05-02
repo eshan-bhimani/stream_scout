@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StreamScout</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<main class="container">
+  <header class="topbar">
+    <a class="brand" href="/">StreamScout</a>
+    <nav class="nav">
+      <a href="/movies">Browse</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/watchlist">My watchlist</a>
+      <a href="/auth/login">Login</a>
+    </nav>
+  </header>
+
+  <section class="card">
+    <h1>Find what to watch next</h1>
+    <p class="muted">Browse a catalog of movies/series and see which OTT platform has them. Save favorites to your watchlist and leave reviews.</p>
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn primary" href="/movies">Browse trending</a>
+      <a class="btn" href="/platforms">Platform analytics</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h1 style="font-size:20px;">Trending picks</h1>
+    <div class="grid" style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px;">
+      <a class="card" style="padding:12px;" th:each="m : ${trending}" th:href="@{'/movies/' + ${m.id}}">
+        <div style="min-width:0;">
+          <div style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" th:text="${m.title}"></div>
+          <div class="muted" th:text="${m.contentType + ' • ' + m.genre + ' • ' + m.releaseYear}"></div>
+          <div class="muted" th:text="${m.rating != null ? 'Rating: ' + m.rating : 'Rating: N/A'}"></div>
+        </div>
+      </a>
+    </div>
+  </section>
+</main>
+</body>
+</html>
+

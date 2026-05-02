@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Platforms • StreamScout</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<main class="container">
+  <header class="topbar">
+    <a class="brand" href="/">StreamScout</a>
+    <nav class="nav">
+      <a href="/movies">Browse</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/watchlist">My watchlist</a>
+      <a href="/auth/login">Login</a>
+    </nav>
+  </header>
+
+  <section class="card">
+    <h1>Platform analytics</h1>
+    <p class="muted">Aggregations computed from the database using joins and group-by.</p>
+  </section>
+
+  <section class="card">
+    <h1 style="font-size:20px;">Summary</h1>
+    <div style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px; margin-top:12px;">
+      <div class="card" style="padding:12px;" th:each="s : ${stats}">
+        <div style="font-weight:800; font-size:18px;" th:text="${s.platformName}">Platform</div>
+        <div class="muted" th:text="${'Titles: ' + s.titleCount}"></div>
+        <div class="muted" th:text="${'Avg rating: ' + #numbers.formatDecimal(s.avgRating,1,2)}"></div>
+        <div class="muted" th:text="${'Avg trending: ' + #numbers.formatDecimal(s.avgTrending,1,2)}"></div>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>
+
