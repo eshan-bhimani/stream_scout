@@ -78,7 +78,7 @@
                             <option th:selected="${b.bookingStatus == 'CHECKED_OUT'}" value="CHECKED_OUT">CHECKED_OUT</option>
                             <option th:selected="${b.bookingStatus == 'CANCELED'}" value="CANCELED">CANCELED</option>
                         </select>
-                        <label style="font-size:0.8rem;color:var(--muted);">
+                        <label style="font-size:0.78rem;">
                             <input type="checkbox" name="canceled" value="true" th:checked="${b.canceled}"/> canceled
                         </label>
                         <button type="submit" class="btn" style="padding:0.3rem 0.5rem;font-size:0.8rem;">Save</button>

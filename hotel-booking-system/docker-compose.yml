@@ -8,5 +8,5 @@ services:
       MYSQL_DATABASE: hotel_booking_db
     ports:
       # Use 3307 when host port 3306 is already taken by a local MySQL install.
-      - "3307:3306"
+      - "3306:3306"
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
