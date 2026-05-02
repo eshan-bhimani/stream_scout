@@ -46,7 +46,8 @@ public class MovieController {
       Model model
   ) {
     model.addAttribute("platforms", platformRepository.listPlatformNames());
-    model.addAttribute("movies", movieRepository.search(q, platform, genre, type, yearMin, yearMax, 48));
+    model.addAttribute("movies", movieRepository.search(
+        q, platform, genre, type, yearMin, yearMax, MovieRepository.MAX_BROWSE_RESULTS));
     model.addAttribute("q", q);
     model.addAttribute("platform", platform);
     model.addAttribute("genre", genre);

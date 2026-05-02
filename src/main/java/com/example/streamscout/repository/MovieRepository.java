@@ -14,6 +14,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class MovieRepository {
+  /** Upper bound for browse/search pages (dataset is ~2500 rows; leave headroom). */
+  public static final int MAX_BROWSE_RESULTS = 10_000;
+
   private final DataSource dataSource;
 
   public MovieRepository(DataSource dataSource) {
@@ -52,7 +55,7 @@ public class MovieRepository {
       ps.setObject(i++, yearMin);
       ps.setObject(i++, yearMax);
       ps.setObject(i++, yearMax);
-      ps.setInt(i, Math.max(1, Math.min(limit, 100)));
+      ps.setInt(i, Math.max(1, Math.min(limit, MAX_BROWSE_RESULTS)));
 
       List<MovieCard> out = new ArrayList<>();
       try (ResultSet rs = ps.executeQuery()) {
